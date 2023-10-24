@@ -37,19 +37,44 @@
 
 <script>
 
-    // Add item
+var form = document.getElementById('addForm');
+var itemList = document.getElementById('items');
+var filter = document.getElementById('filter');
+
+// Form submit event
+form.addEventListener('submit', addItem);
+// Delete event
+itemList.addEventListener('click', removeItem);
+// Filter event
+filter.addEventListener('input', filterItems);
+
+// Add item
 function addItem(e) {
   e.preventDefault();
 
-  // Get input value
-  var newItem = document.getElementById('item').value;
+  // Get input values
+  var itemName = document.getElementById('item').value;
+  var itemDescription = document.getElementById('description').value;
 
   // Create new li element
   var li = document.createElement('li');
   // Add class
   li.className = 'list-group-item';
-  // Add text node with input value
-  li.appendChild(document.createTextNode(newItem));
+
+  // Create a div to display both name and description
+  var itemDiv = document.createElement('div');
+
+  // Add text node with item name
+  var itemNameNode = document.createElement('h4');
+  itemNameNode.appendChild(document.createTextNode(itemName));
+  itemDiv.appendChild(itemNameNode);
+
+  // Add text node with item description
+  var itemDescriptionNode = document.createElement('p');
+  itemDescriptionNode.appendChild(document.createTextNode(itemDescription));
+  itemDiv.appendChild(itemDescriptionNode);
+
+  li.appendChild(itemDiv);
 
   // Create del button element
   var deleteBtn = document.createElement('button');
@@ -72,6 +97,35 @@ function addItem(e) {
   // Append li to list
   itemList.appendChild(li);
 }
+
+// Remove item
+function removeItem(e) {
+  if (e.target.classList.contains('delete')) {
+    if (confirm('Are You Sure?')) {
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  }
+}
+
+// Filter Items
+function filterItems() {
+  // Convert text to lowercase
+  var text = filter.value.toLowerCase();
+  // Get list items
+  var items = itemList.getElementsByTagName('li');
+
+  // Convert to an array
+  Array.from(items).forEach(function (item) {
+    var itemText = item.textContent.toLowerCase();
+    if (itemText.indexOf(text) !== -1) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
 
 </script>
 
